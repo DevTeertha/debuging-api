@@ -1,6 +1,7 @@
 const imagesArea = document.querySelector('.images');
 const gallery = document.querySelector('.gallery');
 const galleryHeader = document.querySelector('.gallery-header');
+const searchBox = document.getElementById('search');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
@@ -46,7 +47,6 @@ const selectItem = (event, img) => {
   } else {
     element.classList.remove('added');
     sliders.pop(img);
-    console.log(sliders);
   }
 }
 var timer
@@ -110,6 +110,13 @@ const changeSlide = (index) => {
 
   items[index].style.display = "block"
 }
+
+//Search By Using Enter Button
+searchBox.addEventListener('keypress',function(event){
+  if(event.key === 'Enter'){
+    searchBtn.click();
+  }
+});
 
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
