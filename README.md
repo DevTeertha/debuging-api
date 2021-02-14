@@ -1,1 +1,1 @@
-# fancy-slider-debug
+# debuging-api
