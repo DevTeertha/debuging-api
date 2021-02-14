@@ -5,6 +5,7 @@ const searchBox = document.getElementById('search');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+const errorDisplay = document.getElementById('error-container');
 // selected image 
 let sliders = [];
 
@@ -16,24 +17,34 @@ const KEY = '20270153-d7aa3318c94ec8c3970d59de2&q';
 
 // show images 
 const showImages = (images) => {
-  imagesArea.style.display = 'block';
-  gallery.innerHTML = '';
-  // show gallery title
-  galleryHeader.style.display = 'flex';
-  images.forEach(image => {
-    let div = document.createElement('div');
-    div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
-  })
-
+  if (images.total == 0) {
+    sliderContainer.innerHTML = '';
+    imagesArea.style.display = 'none';
+    ErrorMessageDisplay();
+  }
+  else {
+    imagesArea.style.display = 'block';
+    gallery.innerHTML = '';
+    // show gallery title
+    galleryHeader.style.display = 'flex';
+    images.hits.forEach(image => {
+      let div = document.createElement('div');
+      div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
+      div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+      gallery.appendChild(div);
+    })
+  }
 }
 
 const getImages = (query) => {
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
+    .then(data => showImages(data))
+    .catch(err => ErrorMessageDisplay())
+}
+
+const ErrorMessageDisplay = () => {
+  errorDisplay.className = 'd-block';
 }
 
 let slideIndex = 0;
@@ -46,7 +57,7 @@ const selectItem = (event, img) => {
     sliders.push(img);
   } else {
     element.classList.remove('added');
-    sliders.pop(img);
+    sliders.splice(item, 1);
   }
 }
 var timer
@@ -128,10 +139,11 @@ searchBox.addEventListener('keypress', function (event) {
 });
 
 searchBtn.addEventListener('click', function () {
+  errorDisplay.className = 'd-none';
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
   const search = document.getElementById('search');
-  getImages(search.value)
+  getImages(search.value);
   sliders.length = 0;
 })
 
