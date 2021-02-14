@@ -64,6 +64,52 @@ img {
     width: 90%;
   }
 }
-.img-container:hover{
-  border: 1px solid rgb(22, 19, 46);
+
+
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: .2s ease;
+  background-color: rgba(32, 36, 37, 0.705);
+  -webkit-transition: .2s ease;
+  -moz-transition: .2s ease;
+  -ms-transition: .2s ease;
+  -o-transition: .2s ease;
+}
+.UnSelected{
+  opacity: 0;
+}
+.Selected{
+  opacity: 1;
+}
+.img-container{
+  cursor: pointer;
+  position: relative;
+}
+.img-container:hover .overlay {
+  opacity: 1;
+}
+
+.text {
+  color: white;
+  font-size: 1em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  cursor: pointer;
+  outline: none;
 }

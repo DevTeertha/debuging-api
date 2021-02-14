@@ -28,9 +28,16 @@ const showImages = (images) => {
     // show gallery title
     galleryHeader.style.display = 'flex';
     images.hits.forEach(image => {
+      console.log(image);
       let div = document.createElement('div');
       div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-      div.innerHTML = `<img class="img-fluid img-thumbnail img-container" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+      div.innerHTML = `
+      <div class="img-container" onclick=selectItem(event,"${image.webformatURL}")>
+        <img class="img-fluid img-thumbnail image" src="${image.webformatURL}" alt="${image.tags}">
+          <div id="overlay" class="overlay UnSelected">
+          </div>
+      </div>
+      `;
       gallery.appendChild(div);
     })
   }
@@ -50,13 +57,16 @@ const ErrorMessageDisplay = () => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-
   let item = sliders.indexOf(img);
   if (item === -1) {
-    element.classList.add('added');
+    // element.classList.add('added');
+    element.classList.remove('UnSelected');
+    element.classList.add('Selected');
     sliders.push(img);
   } else {
-    element.classList.remove('added');
+    // element.classList.remove('added');
+    element.classList.remove('Selected');
+    element.classList.add('UnSelected');
     sliders.splice(item, 1);
   }
 }
@@ -89,7 +99,6 @@ const createSlider = () => {
     imagesArea.style.display = 'none';
 
     sliders.forEach(slide => {
-      console.log(slide);
       let item = document.createElement('div')
       item.className = "slider-item";
       item.innerHTML = `<img class="w-100"
