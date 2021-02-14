@@ -16,13 +16,13 @@ let sliders = [];
 const KEY = '20270153-d7aa3318c94ec8c3970d59de2&q';
 
 // Loading Spinner
-const toggleSpinner = (isTrue) =>{
+const toggleSpinner = (isTrue) => {
   const spinner = document.getElementById('loading-spinner');
 
-  if(isTrue){
+  if (isTrue) {
     spinner.classList.remove('d-none');
   }
-  else{
+  else {
     spinner.classList.add('d-none');
   }
 }
@@ -40,7 +40,6 @@ const showImages = (images) => {
     // show gallery title
     galleryHeader.style.display = 'flex';
     images.hits.forEach(image => {
-      console.log(image);
       let div = document.createElement('div');
       div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
       div.innerHTML = `
@@ -57,6 +56,7 @@ const showImages = (images) => {
 }
 
 const getImages = (query) => {
+  imagesArea.style.display = 'none';
   toggleSpinner(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
@@ -66,6 +66,7 @@ const getImages = (query) => {
 
 const ErrorMessageDisplay = () => {
   errorDisplay.className = 'd-block';
+  toggleSpinner(false);
 }
 
 let slideIndex = 0;
@@ -102,7 +103,7 @@ const createSlider = () => {
     sliderContainer.innerHTML = '';
     const prevNext = document.createElement('div');
     prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
-    prevNext.innerHTML = ` 
+    prevNext.innerHTML = `
     <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
     <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
     `;
@@ -115,9 +116,11 @@ const createSlider = () => {
     sliders.forEach(slide => {
       let item = document.createElement('div')
       item.className = "slider-item";
-      item.innerHTML = `<img class="w-100"
+      item.innerHTML = `<button onclick="closeBtn();" class="btn btn-danger closeBtn">X</button>
+      <img class="w-100"
       src="${slide}"
-      alt="">`;
+      alt="">
+      `;
       sliderContainer.appendChild(item)
     })
     changeSlide(0)
@@ -127,7 +130,12 @@ const createSlider = () => {
     }, duration);
   }
 }
+const closeBtn = () =>{
+  document.querySelector('.main').innerHTML= '';
+  imagesArea.innerHTML = '';
+  searchBox.value = '';
 
+}
 // change slider index 
 const changeItem = index => {
   changeSlide(slideIndex += index);
@@ -162,14 +170,19 @@ searchBox.addEventListener('keypress', function (event) {
 });
 
 searchBtn.addEventListener('click', function () {
-  errorDisplay.className = 'd-none';
-  document.querySelector('.main').style.display = 'none';
-  clearInterval(timer);
   const search = document.getElementById('search');
-  getImages(search.value);
-  sliders.length = 0;
+  if (search.value === '') {
+    alert('Please Write Something!');
+  }
+  else {
+    errorDisplay.className = 'd-none';
+    document.querySelector('.main').style.display = 'none';
+    clearInterval(timer);
+    getImages(search.value);
+    sliders.length = 0;
+  }
 })
 
 sliderBtn.addEventListener('click', function () {
-  createSlider()
+  createSlider();
 })
