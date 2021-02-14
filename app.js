@@ -15,6 +15,18 @@ let sliders = [];
 // to create your own api key
 const KEY = '20270153-d7aa3318c94ec8c3970d59de2&q';
 
+// Loading Spinner
+const toggleSpinner = (isTrue) =>{
+  const spinner = document.getElementById('loading-spinner');
+
+  if(isTrue){
+    spinner.classList.remove('d-none');
+  }
+  else{
+    spinner.classList.add('d-none');
+  }
+}
+
 // show images 
 const showImages = (images) => {
   if (images.total == 0) {
@@ -40,10 +52,12 @@ const showImages = (images) => {
       `;
       gallery.appendChild(div);
     })
+    toggleSpinner(false);
   }
 }
 
 const getImages = (query) => {
+  toggleSpinner(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data))
